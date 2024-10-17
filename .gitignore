@@ -4,3 +4,7 @@ tests/model/__pycache__
 tests/__pycache__
 
 tests/model/.DS_Store
+
+**/.DS_Store
+
+tests/.DS_Store
