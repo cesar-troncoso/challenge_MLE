@@ -1,0 +1,6 @@
+challenge/.ipynb_checkpoints
+challenge/__pycache__
+tests/model/__pycache__
+tests/__pycache__
+
+tests/model/.DS_Store
