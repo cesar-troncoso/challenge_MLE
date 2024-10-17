@@ -14,7 +14,6 @@ COPY requirements-test.txt requirements-test.txt
 # Copiar el archivo de datos al contenedor
 COPY data/data.csv data/data.csv
 
-
 # Actualizar los repositorios e instalar distutils
 RUN apt-get update && apt-get install -y python3-distutils
 
