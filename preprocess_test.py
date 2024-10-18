@@ -18,6 +18,14 @@ print("Entrenamiento del modelo completado exitosamente.")
 
 # Imprimir las primeras filas de features y target para verificar
 print("Features:")
-print(features.head())
+print(features)
 print("\nTarget:")
-print(target.head())
+print(target)
+
+
+# Predecir usando las mismas features para la prueba (solo como ejemplo)
+predictions = model.predict(features)
+
+# Imprimir las predicciones
+print("Predicciones:")
+print(predictions)

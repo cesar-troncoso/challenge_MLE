@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from typing import Tuple, Union
+from typing import Tuple, Union, List
 import xgboost as xgb
 
 class DelayModel:
@@ -112,3 +112,22 @@ class DelayModel:
             scale_pos_weight=scale_pos_weight
         )
         self._model.fit(features, target)
+
+    def predict(
+        self,
+        features: pd.DataFrame
+    ) -> List[int]:
+        """
+        Realiza predicciones sobre nuevos datos.
+
+        Args:
+            features (pd.DataFrame): Datos preprocesados para predecir.
+        
+        Returns:
+            List[int]: Predicciones de retraso (1 = retrasado, 0 = no retrasado).
+        """
+        if self._model is None:
+            raise ValueError("El modelo no ha sido entrenado. Llame al método 'fit' antes de predecir.")
+
+        predictions = self._model.predict(features)
+        return predictions.tolist()
