@@ -1,3 +1,4 @@
 matplotlib~=3.7.2
 seaborn~=0.12.2
 xgboost
+fastapi~=0.100.0 
