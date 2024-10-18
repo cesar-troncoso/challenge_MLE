@@ -119,9 +119,3 @@ We are looking for a proper `CI/CD` implementation for this development.
 
 - Create a new folder called `.github` and copy the `workflows` folder that we provided inside it.
 - Complete both `ci.yml` and `cd.yml`(consider what you did in the previous parts).
-
-
-
-docker build -t challenge_mle .
-
-docker run -it challenge_mle pytest
