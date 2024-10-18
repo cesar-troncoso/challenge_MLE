@@ -6,27 +6,22 @@ FROM python:3.11
 # Establecer el directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copiar los archivos de requisitos al contenedor
+# Copiar los archivos de requisitos al contenedor primero (esto cambia con menos frecuencia)
 COPY requirements.txt requirements.txt
 COPY requirements-dev.txt requirements-dev.txt
 COPY requirements-test.txt requirements-test.txt
-
-# Copiar el archivo de datos al contenedor
-COPY data/data.csv data/data.csv
-
-# Actualizar los repositorios e instalar distutils
-RUN apt-get update && apt-get install -y python3-distutils
 
 # Instalar las dependencias
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN pip install -r requirements-dev.txt
 RUN pip install -r requirements-test.txt
-
-# Asegúrate de instalar una versión específica de `anyio` si hay problemas de compatibilidad
 RUN pip install anyio==3.6.2
 
-# Copiar todo el contenido de la aplicación al contenedor
+# Copiar solo el archivo de datos (esto puede cambiar con frecuencia)
+COPY data/data.csv data/data.csv
+
+# Copiar el resto de los archivos de la aplicación (código fuente)
 COPY . .
 
 # Exponer el puerto si la aplicación necesita uno (por ejemplo, para la API con FastAPI)
