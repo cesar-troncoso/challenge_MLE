@@ -26,11 +26,45 @@ async def post_predict(input_data: dict) -> dict:
     # Imprimir el cuerpo del input para diagnóstico
     print("Datos del body:", input_data)
 
-    # Obtener la primera fila del DataFrame como un diccionario sin lista
-    csv_head = data.head(1).to_dict(orient="index")  # Convierte a diccionario
+    # Convertir el input a un DataFrame
+    input_df = pd.DataFrame([input_data])  # Crear DataFrame directamente del body
 
-    # Extraer el primer registro del diccionario
-    csv_head = csv_head[list(csv_head.keys())[0]]  # Acceder al primer registro
+    # Preprocesar el DataFrame
+    input_features = model.preprocess(input_df)
 
-    # Retornar el body recibido y los datos del CSV
-    return {"body": input_data, "csv": csv_head}
+    # Obtener las características esperadas del modelo
+    expected_features = model._model.get_booster().feature_names
+
+    # Crear un diccionario para las características esperadas y sus valores
+    expected_feature_values = {feature: 0.0 for feature in expected_features}  # Inicializar en 0
+
+    # Llenar los valores esperados con los de input_features
+    for feature in expected_features:
+        if feature in input_features.columns:
+            expected_feature_values[feature] = input_features[feature].iloc[0].item()  # Convertir a valor escalar
+
+    # Combinar el input original con los valores esperados
+    combined_output = {**input_data, **expected_feature_values}
+
+    # Transformar combined_output a un formato similar a expected_features
+    combined_output_transformed = [
+        {"feature": key, "value": value}
+        for key, value in combined_output.items()
+    ]
+
+    # Crear un DataFrame para la predicción usando combined_output
+    prediction_input = pd.DataFrame([expected_feature_values])  # Crear DataFrame a partir de expected_feature_values
+
+    # Realizar la predicción utilizando las características del input
+    prediction = model.predict(prediction_input)
+
+    # Crear una lista de características esperadas con sus valores
+    expected_features_with_values = [
+        {"feature": feature, "value": expected_feature_values[feature]}
+        for feature in expected_features
+    ]
+
+    # Retornar el JSON combinado
+    return {
+        "prediction": prediction  # Añadir la predicción al retorno
+    }
