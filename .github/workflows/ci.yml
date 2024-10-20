@@ -22,5 +22,6 @@ jobs:
     - name: Verify GCP Authentication
       run: gcloud auth list
 
-    - name: Verify GCP Project
-      run: gcloud projects describe ${{ secrets.GCP_PROJECT_ID }}
+    - name: Verify Artifact Registry Access
+      run: |
+        gcloud artifacts repositories list --location=us-central1
