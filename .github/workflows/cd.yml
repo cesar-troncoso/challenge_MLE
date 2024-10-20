@@ -21,6 +21,11 @@ jobs:
         gcloud auth activate-service-account --key-file ${{ github.workspace }}/gcp-key.json
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
+    - name: Verify Image Access
+      run: |
+        gcloud artifacts repositories list --location=${{ secrets.CLOUD_RUN_REGION }}
+        gcloud container images list --repository=gcr.io/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy
+
     - name: Print Variables
       run: |
         echo "Project ID: ${{ secrets.GCP_PROJECT_ID }}"
