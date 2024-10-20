@@ -20,9 +20,10 @@ jobs:
 
     - name: Install dependencies
       run: |
+        pip install --upgrade pip
         pip install -r requirements.txt
-        pip install -r requirements-test.txt  # Asegúrate de instalar este archivo también
-
+        pip install -r requirements-dev.txt
+        pip install -r requirements-test.txt
 
     - name: Run tests
       run: |
