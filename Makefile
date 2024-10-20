@@ -24,6 +24,8 @@ install:		## Install dependencies
 	pip install -r requirements.txt
 
 STRESS_URL = https://challenge-mle-634329014145.us-central1.run.app
+# STRESS_URL = http://localhost:8080
+
 .PHONY: stress-test
 stress-test:
 	# change stress url to your deployed app 
