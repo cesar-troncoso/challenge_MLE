@@ -20,13 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --upgrade pip  # Actualiza pip a la última versión
-        pip install -r requirements-test.txt  # Instala las dependencias desde requirements-test.txt
-        pip install -r requirements-dev.txt  # Instala las dependencias desde requirements-dev.txt
-
-    - name: Verify pytest installation
-      run: |
-        pip show pytest  # Verifica que pytest esté instalado
+        pip install -r requirements.txt
 
     - name: Run tests
       run: |
@@ -38,8 +32,8 @@ jobs:
 
     - name: Push Docker image
       run: |
-        echo "${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}" > ${{ github.workspace }}/gcp-key.json
-        gcloud auth activate-service-account --key-file=${{ github.workspace }}/gcp-key.json
+        echo "${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}" | base64 --decode > ${{ github.workspace }}/gcp-key.json
+        gcloud auth activate-service-account --key-file ${{ github.workspace }}/gcp-key.json
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
         docker tag ${{ secrets.IMAGE_NAME }} gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.IMAGE_NAME }}
         docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.IMAGE_NAME }}
