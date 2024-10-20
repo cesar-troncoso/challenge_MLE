@@ -1,4 +1,4 @@
-name: CI
+name: CI-Test
 
 on:
   push:
@@ -6,39 +6,21 @@ on:
       - main  # Ejecuta en cada push a la rama main
 
 jobs:
-  build:
+  test-gcp-credentials:
     runs-on: ubuntu-latest
 
     steps:
     - name: Check out the code
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11'  # Cambia a la versión que necesites
-
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
-        pip install -r requirements-test.txt
-
-    - name: Run tests
-      run: |
-        make model-test  # Ejecuta las pruebas del modelo
-
-    - name: Build Docker image
-      run: |
-        docker build -t ${{ secrets.IMAGE_NAME }} .  # Construye la imagen
-
-    - name: Push Docker image
+    - name: Set up GCP credentials
       run: |
         echo "${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}" | base64 --decode > ${{ github.workspace }}/gcp-key.json
         gcloud auth activate-service-account --key-file ${{ github.workspace }}/gcp-key.json
         gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-        # Etiqueta la imagen para el repositorio específico
-        docker tag ${{ secrets.IMAGE_NAME }} gcr.io/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ secrets.IMAGE_NAME }}
-        # Empuja la imagen al Artifact Registry
-        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/${{ secrets.IMAGE_NAME }}
+
+    - name: Verify GCP Authentication
+      run: gcloud auth list
+
+    - name: Verify GCP Project
+      run: gcloud projects describe ${{ secrets.GCP_PROJECT_ID }}
