@@ -20,7 +20,13 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt
+        pip install --upgrade pip  # Actualiza pip a la última versión
+        pip install -r requirements-test.txt  # Instala las dependencias desde requirements-test.txt
+        pip install -r requirements-dev.txt  # Instala las dependencias desde requirements-dev.txt
+
+    - name: Verify pytest installation
+      run: |
+        pip show pytest  # Verifica que pytest esté instalado
 
     - name: Run tests
       run: |
