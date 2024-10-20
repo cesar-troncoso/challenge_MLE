@@ -28,3 +28,11 @@ jobs:
     - name: Verify Artifact Registry Access
       run: |
         gcloud artifacts repositories list --location=us-central1
+
+    - name: Build Docker image (Dummy)
+      run: |
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/dummy-image:latest .
+
+    - name: Push Docker image (Dummy)
+      run: |
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/dummy-image:latest
