@@ -29,6 +29,10 @@ jobs:
       run: |
         gcloud artifacts repositories list --location=us-central1
 
+    - name: Authenticate Docker with GCP
+      run: |
+        gcloud auth configure-docker gcr.io
+
     - name: Build Docker image (Dummy)
       run: |
         docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/dummy-image:latest .
